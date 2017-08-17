@@ -1,0 +1,22 @@
+{
+  "name": "discord-bot-honger",
+  "version": "1.0.0",
+  "description": "Hong'er bot",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poonwu/discord-bot-honger.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/poonwu/discord-bot-honger/issues"
+  },
+  "homepage": "https://github.com/poonwu/discord-bot-honger#readme",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  }
+}
