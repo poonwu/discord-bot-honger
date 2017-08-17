@@ -9,7 +9,7 @@ var $ = null;
 var novelLink = config.novel_url;
 var chapterLink = null;
 var chapterTitle = null;
-var delay = 10000;
+var delay = 30000;
 var polling = AsyncPolling(function(end) {
     axios.get(novelLink).then((res) => {
         $ = cheerio.load(res.data);
@@ -25,7 +25,6 @@ var polling = AsyncPolling(function(end) {
         end();
     })
     .catch((err) => {
-        console.error(err);
         end();
     });
 }, delay);
