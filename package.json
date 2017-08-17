@@ -4,7 +4,8 @@
   "description": "Hong'er bot",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,9 @@
   },
   "homepage": "https://github.com/poonwu/discord-bot-honger#readme",
   "dependencies": {
+    "async-polling": "^0.2.1",
+    "axios": "^0.16.2",
+    "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.1.0"
   }
 }
