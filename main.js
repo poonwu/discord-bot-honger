@@ -9,7 +9,7 @@ var $ = null;
 var novelLink = config.novel_url;
 var chapterLink = null;
 var chapterTitle = null;
-var delay = 5000;
+var delay = 10000;
 var polling = AsyncPolling(function(end) {
     axios.get(novelLink).then((res) => {
         $ = cheerio.load(res.data);
@@ -60,12 +60,16 @@ client.on('ready', () => {
 client.on('message', message => {
     // only if Hong'er is mentioned
     if(!message.mentions.everyone && message.mentions.users.find('id', client.user.id)) {
-        message.channel.send('zzzZZZZ');
+        message.channel.send(':sleeping:');
     }
 
     if(message.content === '!check') {
         message.channel.send(chapterTitle);
     }
+    if(message.content.startsWith('!delay')) {
+        message.channel.send(delay + 'ms');
+    }
+
 });
 
 http.createServer(function(req,res) {
