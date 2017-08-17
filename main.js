@@ -3,6 +3,7 @@ const AsyncPolling = require('async-polling');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const config = require('./config.json');
+const http = require('http');
 
 var $ = null;
 var novelLink = config.novel_url;
@@ -67,5 +68,10 @@ client.on('message', message => {
     }
 });
 
+http.createServer(function(req,res) {
+    res.writeHead(200);
+    res.write('Launched!');
+    res.end();
+}).listen(process.env.PORT || 3000);
 
 client.login(config.token);
