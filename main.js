@@ -8,6 +8,7 @@ var $ = null;
 var novelLink = config.novel_url;
 var chapterLink = null;
 var chapterTitle = null;
+var delay = 5000;
 var polling = AsyncPolling(function(end) {
     axios.get(novelLink).then((res) => {
         $ = cheerio.load(res.data);
@@ -26,7 +27,7 @@ var polling = AsyncPolling(function(end) {
         console.error(err);
         end();
     });
-}, 5000);
+}, delay);
 
 function broadcast(content) {
     client.guilds.array().forEach(g => {
@@ -62,7 +63,7 @@ client.on('message', message => {
     }
 
     if(message.content === '!check') {
-        broadcast(chapterTitle);
+        message.channel.send(chapterTitle);
     }
 });
 
