@@ -1,2 +1,2 @@
 # discord-bot-honger
-Discord bot for doing WW related activity
+Discord bot for doing misc related activity
