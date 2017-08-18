@@ -73,25 +73,6 @@ var commands = {
       msg.channel.send(content);
       return true;
     }
-  },
-  'calc': {
-    description: "Let Hong'er do some math?",
-    action: function(bot, msg, ...args) {
-      let ans = null;
-      try {
-        ans = math.eval(args.join(' '));
-      }
-      catch(e) {
-        
-      }
-
-      if(ans === null) {
-        msg.channel.send("Ahh... Umm... Ehh...!??");
-      } else {
-        msg.channel.send('The answer is... __**' + math.eval(args.join(' ')) + '**__ !!!!');
-      }
-      return true;
-    }
   }
 };
 
