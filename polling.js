@@ -29,7 +29,7 @@ module.exports = {
       return null;
     }
   },
-  'lnmtl': {
+  'mtl': {
     url: 'https://lnmtl.com/novel/against-the-gods',
     check: function(bot, $) {
       let newArray = [];
@@ -40,29 +40,28 @@ module.exports = {
         newArray.push({url, title, date});
       });
 
-      if(bot.store.lnmtl) {
-        let newOnes = _.differenceBy(newArray, bot.store.lnmtl, 'url');
+      if(bot.store.mtl) {
+        let newOnes = _.differenceBy(newArray, bot.store.mtl, 'url');
         
         if(newOnes.length > 0) {
-          bot.store.lnmtl = newArray;
+          bot.store.mtl = newArray;
           
           let r = newOnes.map(e => e.url).join('\n');
-          bot.broadcast('Ohhh!!! Also...new lnmtl chapter!!!\n' + r);
+          bot.broadcast('Ohhh!!! Also...new mtl chapter!!!\n' + r);
 
           return true;
         }
       } else {
-        bot.store.lnmtl = newArray;
+        bot.store.mtl = newArray;
       }
       return false;
     },
     render: function(bot) {
-      if(bot.store.lnmtl) {
-        let top =  _.reverse(_.sortBy(bot.store.lnmtl, 'date'))[0];
+      if(bot.store.mtl) {
+        let top =  _.reverse(_.sortBy(bot.store.mtl, 'date'))[0];
         return top.title + '\n' + top.url;
       }
       return null;
     }
-  },
-  
+  }
 };
