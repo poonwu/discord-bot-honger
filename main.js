@@ -39,6 +39,10 @@ class Bot {
         // msg listener
         this.client.on('message', message => {
             // only if Hong'er is mentioned
+
+            if(message.channel.name !== 'talk-to-honger') {
+                return;
+            }
             if(!message.mentions.everyone && message.mentions.users.find('id', this.client.user.id)) {
                 message.channel.send(':sleeping:');
             }
@@ -94,7 +98,7 @@ class Bot {
     }
     broadcast(content) {
         this.client.guilds.array().forEach(g => {
-            let channel = g.channels.find('name', 'general');
+            let channel = g.channels.find('name', 'talk-to-honger');
             channel.send(content);
         });
     }
