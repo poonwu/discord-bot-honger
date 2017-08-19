@@ -99,7 +99,9 @@ class Bot {
     broadcast(content) {
         this.client.guilds.array().forEach(g => {
             let channel = g.channels.find('name', 'talk-to-honger');
-            channel.send(content);
+            if(channel) {
+                channel.send(content);
+            }
         });
     }
     connect() {
