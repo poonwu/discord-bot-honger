@@ -39,7 +39,7 @@ class Bot {
     
             this.startTime = moment();
             this.polling.run();
-            //this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
+            this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
         // msg listener
