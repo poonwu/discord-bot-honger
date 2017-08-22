@@ -13,6 +13,10 @@ var commands = {
       try {
         let delay = parseInt(time) * 1000;
         
+        if(isNaN(delay)) {
+          throw new Error();
+        }
+        
         if(delay < 5000) {
            delay = 5000;
         }
@@ -24,7 +28,6 @@ var commands = {
         return true;
       }
       catch(e) {
-        console.log(e);
         return false;
       }
     }

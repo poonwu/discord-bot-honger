@@ -11,7 +11,7 @@ let pollings = {
       if(bot.store[this.name]) {
         if(bot.store[this.name].url != url) {
           bot.store[this.name].title = title;
-          bot.store[this.name].url =   url;
+          bot.store[this.name].url = url;
           return true;
         }
       } else {
@@ -57,7 +57,7 @@ let pollings = {
       
       if(bot.store[this.name]) {
         // is new release
-        if(latest.url !== bot.store[this.name]) {
+        if(latest.url !== bot.store[this.name].url) {
           bot.store[this.name] = latest;
           return true;
         }

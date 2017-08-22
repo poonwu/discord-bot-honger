@@ -9,28 +9,28 @@ const moment = require('moment');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
 
 
 class Bot {
     constructor() {
         this.store = {};
         this.client = new Discord.Client();
-        this.pollingHandlers = _.map(pollingList, o => this.getPollingHandler(o));
         this.polling = AsyncPolling(end => {
-           axios.all(this.pollingHandlers)
+           axios.all(_.map(pollingList, o => this.getPollingHandler(o)))
             .then((res) => {
                 res.forEach(e => {
-                    if(e) {
-                        this.broadcast('Ohhh!!!\nNew Chapter from ' + e.name.toUpperCase() + '!!!\n' + e.url + '\nHehe...');
+                    if(_.isObject(e)) {
+                        this.broadcast('Ohhh!!!\nNew Chapter from ' + e.name.toUpperCase() + '!!!\n' + this.store[e.name].url + '\nHehe...');
                     }
                 });
                 end();
             })
             .catch((e) => {
+                console.error(e);
                 end();
             });
-        }, 20000);
+        }, 5000);
 
         // on ready
         this.client.on('ready', () => {
@@ -63,7 +63,9 @@ class Bot {
                 let resultKeys = _.keys(result);
                 let done = null;
 
-                if(resultKeys.length === 1) {
+                if(cmd.length === 0) {
+                }
+                else if(resultKeys.length === 1) {
                     done = result[resultKeys[0]].action(this, message, ...args);
                 } else if(resultKeys.length > 1) {
                     let exact = _.find(resultKeys, (k) => parseInt(k.split('_')[1]) === args.length);
