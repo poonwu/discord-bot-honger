@@ -9,7 +9,7 @@ const moment = require('moment');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.test.json');
+const config = require('./config.json');
 
 
 class Bot {

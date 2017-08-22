@@ -24,7 +24,8 @@
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.1.0",
     "lodash": "^4.17.4",
-    "mathjs": "^3.16.1"
+    "mathjs": "^3.16.1",
+    "moment": "^2.18.1"
   },
   "engines": {
     "node": "7.9.0"
