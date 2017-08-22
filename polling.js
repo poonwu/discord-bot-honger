@@ -1,67 +1,83 @@
 const _ = require('lodash');
-module.exports = {
+const Discord = require('discord.js');
+let pollings = {
   'raw': {
+    name: 'raw',
+    alias: ['r'],
     url: 'http://book.zongheng.com/book/408586.html',
     check: function(bot, $) {
-      let title = $('a.chap').clone().children().remove().end().text().trim();
+      let title = $('a.chap').clone().children().remove().end().text().split('：')[1].trim();
       let url = $('a.chap').attr('href');
-      if(bot.store.raw) {
-        if(bot.store.raw.url != url) {
-          bot.store.raw.title = title;
-          bot.store.raw.url = url;
-
-          // broadcast to all
-          bot.broadcast('Ohhhh!!!\nMaster @everyone, new chapter is out!!\nChapter is uhh... oh...\n' + title  + '\nHehe');
+      if(bot.store[this.name]) {
+        if(bot.store[this.name].url != url) {
+          bot.store[this.name].title = title;
+          bot.store[this.name].url =   url;
           return true;
         }
       } else {
-        bot.store.raw = {
+        bot.store[this.name] = {
           title: title,
           url: url
         };
       }
       return false;
     },
-    render: function(bot) {
-      if(bot.store.raw) {
-        return bot.store.raw.title + '\n' + bot.store.raw.url;
+    render: function(bot, richEmbed) {
+      if(bot.store[this.name]) {
+        let o = bot.store[this.name];
+
+        if(richEmbed) {
+          richEmbed.addField('Raw Chapter ' + o.title, o.url, true);
+        }
+
+        return o.title + '\n' + o.url;
       }
       return null;
     }
   },
-  'mtl': {
+  'lnmtl': {
+    name: 'lnmtl',
+    alias: ['m', 'mtl'],
     url: 'https://lnmtl.com/novel/against-the-gods',
     check: function(bot, $) {
       let newArray = [];
+
+      // get list of all latest chapters on lnmtl page
       $('a.chapter-link').each(function() {
         let url = $(this).attr('href');
-        let title = $(this).text().trim();
-        let date = $(this).parent().next().find('span.label-default').text();
+        let title = $(this).text().trim().replace('  ', ' ');
+        let date = $(this).parent().next().find('span.label-default').text().trim();
+
         newArray.push({url, title, date});
       });
 
-      if(bot.store.mtl) {
-        let newOnes = _.differenceBy(newArray, bot.store.mtl, 'url');
-        
-        if(newOnes.length > 0) {
-          bot.store.mtl = newArray;
-          
-          let r = newOnes.map(e => e.url).join('\n');
-          bot.broadcast('Ohhh!!! Also...new mtl chapter!!!\n' + r);
+      // latest release
+      let latest =  _.reverse(_.sortBy(newArray, 'date'))[0];
 
+      
+      if(bot.store[this.name]) {
+        // is new release
+        if(latest.url !== bot.store[this.name]) {
+          bot.store[this.name] = latest;
           return true;
         }
       } else {
-        bot.store.mtl = newArray;
+        bot.store[this.name] = latest;
       }
       return false;
     },
-    render: function(bot) {
-      if(bot.store.mtl) {
-        let top =  _.reverse(_.sortBy(bot.store.mtl, 'date'))[0];
-        return top.title + '\n' + top.url;
+    render: function(bot, richEmbed) {
+      if(bot.store.lnmtl) {
+        let o = bot.store[this.name];
+
+        if(richEmbed) {
+          richEmbed.addField('LNMTL Chapter ' + o.title, o.url, true);
+        }
+        
+        return o.title + '\n' + o.url;
       }
       return null;
     }
   }
 };
+module.exports = pollings;

@@ -1,46 +1,92 @@
 const poll = require('./polling.js');
+const Discord = require('discord.js');
 const math = require('mathjs');
+const moment = require('moment');
 const _ = require('lodash');
 
 var checkOptions = _.keys(poll);
 var commands = {
-  'timeout_0': {
-    description: 'Check current request timeout',
-    action: function(bot, msg) {
-      msg.channel.send('timeout=' + bot.settings.delay + 'ms');
-      return true;
-    }
-  },
   'timeout_1': {
-    description: 'Set new request timeout in ms (min=5000)',
-    args: ['new_timeout'],
+    description: 'Set new polling timeout in second (min=5)',
+    args: ['NEW_TIMEOUT'],
     action: function(bot, msg, time) {
       try {
-        bot.settings.delay = parseInt(time);
-
-        if(bot.settings.delay < 5000) {
-          bot.settings.delay = 5000;
+        let delay = parseInt(time) * 1000;
+        
+        if(delay < 5000) {
+           delay = 5000;
         }
         bot.polling.stop();
-        bot.polling._delay = bot.settings.delay;
+        bot.polling._delay = delay;
         bot.polling.run();
         
-        msg.channel.send('timeout=' + bot.settings.delay + 'ms');
+        msg.channel.send('timeout=' + (delay/1000) + 's');
         return true;
       }
       catch(e) {
+        console.log(e);
         return false;
       }
+    }
+  },
+  'poll_1': {
+    description: 'Set polling operation',
+    args: ['ON|OFF'],
+    action: function(bot, msg, op) {
+      op = op.toLowerCase();
+
+      if(op === 'off') {
+        bot.polling.stop();
+      } else if(op === 'on') {
+        bot.polling.stop();
+        bot.polling.run();
+      }
+
+      msg.channel.send('polling=' + (bot.polling._mustSchedule ? 'ON' : 'OFF'));
+      return true;
+    }
+  },
+  'status_0' : {
+    description: 'Check bot status',
+    action: function(bot, msg) {
+      let content = '';
+      let duration = moment.duration(moment().diff(bot.startTime));
+      content += `Polling: **${bot.polling._mustSchedule ? 'ON' : 'OFF'}**\n`;
+      content += `Timeout: **${bot.polling._delay / 1000}** seconds\n`;
+      content += `Running time: **${duration.hours()}**h **${duration.minutes()}**m **${duration.seconds()}**s\n`;
+      msg.channel.send(content);
+      return true;
     }
   },
   'check': {
     description: 'Check latest content from site',
     args: [checkOptions.join('|')],
     action: function(bot, msg, name) {
-      if(!_.has(poll, name)) {
-        name = checkOptions[0];
+      let content = null;
+      let o = null;
+      
+      // check all 
+      if(_.has(poll, name)) {
+        // normal render
+        content = poll[name].render(bot);
       }
-      let content = poll[name].render(bot);
+      else if(o = _.find(poll, e => _.indexOf(e.alias, name) >= 0 )) {
+        // aliasing
+        content = o.render(bot);
+      }  
+      else {
+        let embed = new Discord.RichEmbed()
+          .setTitle('Current Chapters')
+          .setColor(0xc70000);
+        checkOptions.forEach(name => {
+          poll[name].render(bot, embed);
+        });
+        
+        // render rich text
+        content = {embed};
+      }
+
+      // no data?
       if(!content) {
         content = 'Error: cannot find data';
       }

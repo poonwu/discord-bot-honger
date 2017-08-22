@@ -1,11 +1,12 @@
 {
   "name": "discord-bot-honger",
-  "version": "1.1.1b",
+  "version": "1.2.0",
   "description": "Hong'er bot",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js"
+    "start": "node main.js",
+    "watch": "nodemon main.js --watch ."
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,8 @@
   },
   "engines": {
     "node": "7.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

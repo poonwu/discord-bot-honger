@@ -5,51 +5,58 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const http = require('http');
 const math = require('mathjs');
+const moment = require('moment');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
+
 
 class Bot {
     constructor() {
-        this.settings = {
-            delay: 20000
-        };
         this.store = {};
         this.client = new Discord.Client();
+        this.pollingHandlers = _.map(pollingList, o => this.getPollingHandler(o));
         this.polling = AsyncPolling(end => {
-           axios.all(_.map(pollingList, o => this.getPollingHandler(o)))
+           axios.all(this.pollingHandlers)
             .then((res) => {
+                res.forEach(e => {
+                    if(e) {
+                        this.broadcast('Ohhh!!!\nNew Chapter from ' + e.name.toUpperCase() + '!!!\n' + e.url + '\nHehe...');
+                    }
+                });
                 end();
             })
             .catch((e) => {
                 end();
             });
-        }, this.settings.delay);
+        }, 20000);
 
         // on ready
         this.client.on('ready', () => {
             console.log('Bot is ready');
             console.log(`https://discordapp.com/api/oauth2/authorize?client_id=${config.client_id}&scope=bot&permissions=${config.permissions}`);
-            
+    
+            this.startTime = moment();
             this.polling.run();
-            this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
+            //this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
         // msg listener
         this.client.on('message', message => {
-            // only if Hong'er is mentioned
-
+            // only this channel
             if(message.channel.name !== 'talk-to-honger') {
                 return;
             }
+
+            // only if Hong'er is mentioned
             if(!message.mentions.everyone && message.mentions.users.find('id', this.client.user.id)) {
                 message.channel.send(':sleeping:');
             }
         
             // command start with !
             if(message.content.startsWith('!')) {
-                let token = message.content.split(' ');
+                let token = message.content.split(' '); //match(/(?:[^\s"]+|"[^"]*")+/g) 
                 let cmd = token[0].substr(1).toLowerCase();
                 let args = token.slice(1);                
                 let result = _.pickBy(command, (v, k) => _.startsWith(k, cmd));
@@ -84,7 +91,7 @@ class Bot {
                     message.channel.send('Error: wrong conditions or arguments');
                 }
                 if(done === null) {
-                    message.channel.send('Error: cannot find command');
+                    //message.channel.send('Error: cannot find command');
                 }
             }
         });
@@ -93,7 +100,10 @@ class Bot {
     getPollingHandler(pollingObject) {
         return axios.get(pollingObject.url)
             .then((res) => {
-                return pollingObject.check(this, cheerio.load(res.data));
+                return pollingObject.check(this, cheerio.load(res.data)) ? pollingObject : null;
+            })
+            .catch(() => {
+                return null;
             });
     }
     broadcast(content) {
