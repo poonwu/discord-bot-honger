@@ -30,7 +30,7 @@ class Bot {
                 console.error(e);
                 end();
             });
-        }, 609000);
+        }, 60000);
 
         // on ready
         this.client.on('ready', () => {
