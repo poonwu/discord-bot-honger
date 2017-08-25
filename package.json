@@ -1,6 +1,6 @@
 {
   "name": "discord-bot-honger",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Hong'er bot",
   "main": "main.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "axios": "^0.16.2",
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.1.0",
+    "gbk": "^0.1.0",
     "lodash": "^4.17.4",
     "mathjs": "^3.16.1",
     "moment": "^2.18.1"

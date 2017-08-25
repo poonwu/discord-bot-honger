@@ -1,8 +1,20 @@
 # Changelog
 
+## [1.2.1] -2017-8-25
+## Added
+- `parseData()` to polling object
+- `htl` polling
+
+## Changed
+- Readjust min `!timeout` to 20 seconds
+
+## Removed
+- `render()`, now automatically title + url
+- `check()`, now use universal checker
+
 ## [1.2.0] -2017-8-22
 ### Added
-- Changelog
+- `CHANGELOG.md`
 - `!stats` to check current bot's status
 - `!poll <on/off>` to turn on/off polling state
 - `!check` alias naming

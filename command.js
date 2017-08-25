@@ -17,8 +17,8 @@ var commands = {
           throw new Error();
         }
         
-        if(delay < 5000) {
-           delay = 5000;
+        if(delay < 20000) {
+           delay = 20000;
         }
         bot.polling.stop();
         bot.polling._delay = delay;
@@ -64,6 +64,9 @@ var commands = {
   'check': {
     description: 'Check latest content from site',
     args: [checkOptions.join('|')],
+    render: function(bot, obj) {
+      return obj.title + '\n' + obj.url;
+    },
     action: function(bot, msg, name) {
       let content = null;
       let o = null;
@@ -71,18 +74,19 @@ var commands = {
       // check all 
       if(_.has(poll, name)) {
         // normal render
-        content = poll[name].render(bot);
+        content = this.render(bot, bot.store[name]);
       }
       else if(o = _.find(poll, e => _.indexOf(e.alias, name) >= 0 )) {
         // aliasing
-        content = o.render(bot);
+        content = this.render(bot, bot.store[o.name]);
       }  
       else {
+        // render everything
         let embed = new Discord.RichEmbed()
           .setTitle('Current Chapters')
           .setColor(0xc70000);
         checkOptions.forEach(name => {
-          poll[name].render(bot, embed);
+          embed.addField(name.toUpperCase() + ' ' + (bot.store[name] || {}).title, (bot.store[name] || {}).url);
         });
         
         // render rich text

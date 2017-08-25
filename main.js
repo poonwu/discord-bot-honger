@@ -6,6 +6,7 @@ const axios = require('axios');
 const http = require('http');
 const math = require('mathjs');
 const moment = require('moment');
+const gbk = require('gbk');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
@@ -30,7 +31,7 @@ class Bot {
                 console.error(e);
                 end();
             });
-        }, 60000);
+        }, 20000);
 
         // on ready
         this.client.on('ready', () => {
@@ -102,7 +103,17 @@ class Bot {
     getPollingHandler(pollingObject) {
         return axios.get(pollingObject.url)
             .then((res) => {
-                return pollingObject.check(this, cheerio.load(res.data)) ? pollingObject : null;
+                // return null if you don't want it to reports.
+                let newData = pollingObject.parseData(this, cheerio.load(res.data));
+                if(!this.store[pollingObject.name]) {
+                    // first time
+                    this.store[pollingObject.name] = newData;
+                    return null;
+                } else {
+                    let oldUrl = this.store[pollingObject.name].url;
+                    let newUrl = newData.url;
+                    return oldUrl === newUrl ? (this.store[pollingObject.name] = newData) : null;
+                }
             })
             .catch(() => {
                 return null;

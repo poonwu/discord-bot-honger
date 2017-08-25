@@ -1,45 +1,22 @@
 const _ = require('lodash');
+const gbk = require('gbk');
 const Discord = require('discord.js');
 let pollings = {
   'raw': {
     name: 'raw',
     alias: ['r'],
     url: 'http://book.zongheng.com/book/408586.html',
-    check: function(bot, $) {
+    parseData: function(bot, $) {
       let title = $('a.chap').clone().children().remove().end().text().split('：')[1].trim();
       let url = $('a.chap').attr('href');
-      if(bot.store[this.name]) {
-        if(bot.store[this.name].url != url) {
-          bot.store[this.name].title = title;
-          bot.store[this.name].url = url;
-          return true;
-        }
-      } else {
-        bot.store[this.name] = {
-          title: title,
-          url: url
-        };
-      }
-      return false;
-    },
-    render: function(bot, richEmbed) {
-      if(bot.store[this.name]) {
-        let o = bot.store[this.name];
-
-        if(richEmbed) {
-          richEmbed.addField('Raw Chapter ' + o.title, o.url, true);
-        }
-
-        return o.title + '\n' + o.url;
-      }
-      return null;
+      return {title, url};
     }
   },
   'lnmtl': {
     name: 'lnmtl',
     alias: ['m', 'mtl'],
     url: 'https://lnmtl.com/novel/against-the-gods',
-    check: function(bot, $) {
+    parseData: function(bot, $) {
       let newArray = [];
 
       // get list of all latest chapters on lnmtl page
@@ -53,31 +30,37 @@ let pollings = {
 
       // latest release
       let latest =  _.reverse(_.sortBy(newArray, 'date'))[0];
-
-      
-      if(bot.store[this.name]) {
-        // is new release
-        if(latest.url !== bot.store[this.name].url) {
-          bot.store[this.name] = latest;
-          return true;
-        }
-      } else {
-        bot.store[this.name] = latest;
-      }
-      return false;
-    },
-    render: function(bot, richEmbed) {
-      if(bot.store.lnmtl) {
-        let o = bot.store[this.name];
-
-        if(richEmbed) {
-          richEmbed.addField('LNMTL Chapter ' + o.title, o.url, true);
-        }
-        
-        return o.title + '\n' + o.url;
-      }
-      return null;
+      let url = latest.url;
+      let title = latest.title;
+      return {url, title};
     }
-  }
+  },
+  'htl': {
+    name: 'htl',
+    alias: ['h', 'ww', 'alyschu'],
+    url: 'http://www.wuxiaworld.com/category/atg-chapter-release/',
+    parseData: function(bot, $) {
+      let sel = $('article.category-atg-chapter-release').first();
+      let url = sel.find('.entry-content a[href^="http://www.wuxiaworld.com/atg-index/"]').attr('href');
+      let title = sel.find('.entry-title').text().trim();
+
+      return {url, title};
+    }
+  },
+  // 'piaotian': {
+  //   name: 'piaotian',
+  //   alias: ['p', 'pi', 'pt'],
+  //   url: 'http://www.piaotian.com/bookinfo/6/6760.html',
+  //   parseData: function(bot, $) {
+  //     let sel = $('li>a[href^="http://www.piaotian.com/html/"]').first();
+  //     let url = sel.attr('href');
+  //     let title = sel.text();
+
+  //     console.log(title);
+
+  //     return {url, title};
+  //   },
+  //   charset: 'gbk'
+  // }
 };
 module.exports = pollings;
