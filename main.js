@@ -21,7 +21,7 @@ class Bot {
             .then((res) => {
                 res.forEach(e => {
                     if(_.isObject(e)) {
-                        this.broadcast('Ohhh!!!\nNew Chapter from ' + e.name.toUpperCase() + '!!!\n' + this.store[e.name].url + '\nHehe...');
+                        this.broadcast('Ohhh!!!\n@everyone, New Chapter from ' + e.name.toUpperCase() + '!!!\n' + this.store[e.name].url + '\nHehe...');
                     }
                 });
                 end();
