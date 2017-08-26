@@ -112,7 +112,11 @@ class Bot {
                 } else {
                     let oldUrl = this.store[pollingObject.name].url;
                     let newUrl = newData.url;
-                    return oldUrl !== newUrl ? (this.store[pollingObject.name] = newData) : null;
+                    if(oldUrl !== newUrl) {
+                        this.store[pollingObject.name] = newData;
+                        return pollingObject;
+                    }
+                    return null;
                 }
             })
             .catch(() => {
