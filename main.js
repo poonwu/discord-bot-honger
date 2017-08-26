@@ -22,7 +22,7 @@ class Bot {
             .then((res) => {
                 res.forEach(e => {
                     if(_.isObject(e)) {
-                        this.broadcast('Ohhh!!!\n@everyone, New Chapter from ' + e.name.toUpperCase() + '!!!\n' + this.store[e.name].url + '\nHehe...');
+                        this.broadcast('Ohhh!!!\n@everyone, New Chapter from ' + e.name + '!!!\n' + this.store[e.name].url + '\nHehe...');
                     }
                 });
                 end();
@@ -112,7 +112,7 @@ class Bot {
                 } else {
                     let oldUrl = this.store[pollingObject.name].url;
                     let newUrl = newData.url;
-                    return oldUrl === newUrl ? (this.store[pollingObject.name] = newData) : null;
+                    return oldUrl !== newUrl ? (this.store[pollingObject.name] = newData) : null;
                 }
             })
             .catch(() => {
