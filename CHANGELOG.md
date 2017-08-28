@@ -1,4 +1,11 @@
 # Changelog
+## [1.2.1b] -2017-8-28
+## Added
+- `pollingTime` to log last polling time
+- Timeout to axios request
+
+## Changed
+- Fix polling schedule not invoked in case of timeout
 
 ## [1.2.1] -2017-8-25
 ## Added

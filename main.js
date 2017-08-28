@@ -12,19 +12,25 @@ const pollingList = require('./polling.js');
 const pkg = require('./package.json');
 const config = require('./config.json');
 
+// set default request timeout
+axios.defaults.timeout = 5000;
 
 class Bot {
     constructor() {
         this.store = {};
         this.client = new Discord.Client();
         this.polling = AsyncPolling(end => {
-           axios.all(_.map(pollingList, o => this.getPollingHandler(o)))
+            this.lastPollingTime = moment();
+            axios.all(_.map(pollingList, o => this.getPollingHandler(o)))
             .then((res) => {
                 res.forEach(e => {
                     if(_.isObject(e)) {
                         this.broadcast('Ohhh!!!\n@everyone, New Chapter from ' + e.name + '!!!\n' + this.store[e.name].url + '\nHehe...');
                     }
                 });
+                end();
+            }, (err) => {
+                console.error(err);
                 end();
             })
             .catch((e) => {
@@ -39,6 +45,7 @@ class Bot {
             console.log(`https://discordapp.com/api/oauth2/authorize?client_id=${config.client_id}&scope=bot&permissions=${config.permissions}`);
     
             this.startTime = moment();
+            this.lastPollingTime = moment();
             this.polling.run();
             this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
