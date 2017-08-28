@@ -57,7 +57,7 @@ var commands = {
       let pollDuration = moment.duration(moment().diff(bot.lastPollingTime));
       content += `Polling: **${bot.polling._mustSchedule ? 'ON' : 'OFF'}**\n`;
       content += `Timeout: **${bot.polling._delay / 1000}** seconds\n`;
-      content += `Last Polled: **${pollDuration.asSeconds}** seconds ago\n`;
+      content += `Last Polled: **${pollDuration.asSeconds()}** seconds ago\n`;
       content += `Running time: **${duration.hours()}**h **${duration.minutes()}**m **${duration.seconds()}**s\n`;
       msg.channel.send(content);
       return true;
