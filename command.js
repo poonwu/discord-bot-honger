@@ -34,13 +34,13 @@ var commands = {
   },
   'poll_1': {
     description: 'Set polling operation',
-    args: ['ON|OFF'],
+    args: ['ON|OFF|RESET'],
     action: function(bot, msg, op) {
       op = op.toLowerCase();
 
       if(op === 'off') {
         bot.polling.stop();
-      } else if(op === 'on') {
+      } else if(op === 'on' || op === 'reset') {
         bot.polling.stop();
         bot.polling.run();
       }
