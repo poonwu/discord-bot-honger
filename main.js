@@ -10,7 +10,7 @@ const gbk = require('gbk');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.test.json');
+const config = require('./config.json');
 
 // set default request timeout
 axios.defaults.timeout = 5000;
