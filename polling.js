@@ -45,6 +45,9 @@ let pollings = {
       let title = sel.find('.entry-title').text().trim();
 
       return {url, title};
+    },
+    onSuccess: function(bot, store) {
+      return 'New chapter from htl!!!\n' + store.url;
     }
   },
   // 'piaotian': {
@@ -63,4 +66,13 @@ let pollings = {
   //   charset: 'gbk'
   // }
 };
+
+
+_.forOwn(pollings, (v,k) => {
+  _.defaults(v, {
+    onSuccess: function(bot, store, obj) {
+      return '@everyone, New Chapter from ' + obj.name + '!!!\n' + store.url;
+    }
+  });
+});
 module.exports = pollings;

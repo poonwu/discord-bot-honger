@@ -10,7 +10,7 @@ const gbk = require('gbk');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
 
 // set default request timeout
 axios.defaults.timeout = 5000;
@@ -25,7 +25,8 @@ class Bot {
             .then((res) => {
                 res.forEach(e => {
                     if(_.isObject(e)) {
-                        this.broadcast('Ohhh!!!\n@everyone, New Chapter from ' + e.name + '!!!\n' + this.store[e.name].url);
+                        let str = e.onSuccess(this, this.store[e.name], e);
+                        this.broadcast(str);
                     }
                 });
                 end();
@@ -37,7 +38,7 @@ class Bot {
                 console.error(e);
                 end();
             });
-        }, 20000);
+        }, 30000);
 
         // on ready
         this.client.on('ready', () => {

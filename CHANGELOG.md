@@ -1,4 +1,11 @@
 # Changelog
+## [1.2.2] -2017-8-29
+## Added
+- `onSuccess` to return custom message
+
+## Changed
+- broadcast custom message
+
 ## [1.2.1b] -2017-8-28
 ## Added
 - `pollingTime` to log last polling time
