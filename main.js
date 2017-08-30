@@ -26,7 +26,7 @@ class Bot {
                 res.forEach(e => {
                     if(_.isObject(e)) {
                         let str = e.onSuccess(this, this.store[e.name], e);
-                        this.broadcast(str);
+                        this.broadcast(str, 'notices');
                     }
                 });
                 end();
@@ -131,9 +131,9 @@ class Bot {
                 return null;
             });
     }
-    broadcast(content) {
+    broadcast(content, name) {
         this.client.guilds.array().forEach(g => {
-            let channel = g.channels.find('name', 'talk-to-honger');
+            let channel = g.channels.find('name', name || 'talk-to-honger');
             if(channel) {
                 channel.send(content);
             }

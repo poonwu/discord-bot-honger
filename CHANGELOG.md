@@ -1,4 +1,8 @@
 # Changelog
+## [1.2.3] -2017-8-30
+## Added
+- Selectable channel for Hong'er reply
+
 ## [1.2.2] -2017-8-29
 ## Added
 - `onSuccess` to return custom message

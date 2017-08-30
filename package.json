@@ -1,6 +1,6 @@
 {
   "name": "discord-bot-honger",
-  "version": "1.2.1b",
+  "version": "1.2.3",
   "description": "Hong'er bot",
   "main": "main.js",
   "scripts": {
