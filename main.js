@@ -24,26 +24,24 @@ class Bot {
         // create pollings
         _.forOwn(this.pollingList, (o, k) => {
             let delay = _.isNumber(o.delay) ? o.delay : _.isFunction(o.delay) ? o.delay() : null;
+            let promise = null;
             o.asyncPolling = AsyncPolling(end => {
                 // save current time
                 this.lastPollingTime = moment();
-                let promise = null;
 
                 if(_.isArray(o.url)) {
                     let all = o.url.map((url, i) => {
                         return axios.get(url, o.axiosOptions)
                             .then( res=> {
                                 return o.parseData[i](this, res.data);
-                            }, e => null)
-                            .catch(e => e);
+                            });
                     });
 
                     promise = axios.all(all)
                         .then(res => {
                             if(!o.latestChapter) {
-                                o.latestChapter = res[0];
+                                o.latestChapter = res[0] || res[1];
                                 o.onLoadChapter(this);
-                                o.lastChapterTime = moment();
                                 return null;
                             } else {
                                 let newData = null;
@@ -58,7 +56,7 @@ class Bot {
                                 return newData ? o : null;
                             }
                         }, e => {
-                            console.error(e);
+                            //console.error(e);
                             end();
                         });
                 }
@@ -71,7 +69,6 @@ class Bot {
                                 // first time
                                 o.latestChapter = newData;
                                 o.onLoadChapter(this);
-                                o.lastChapterTime = moment();
                                 return null;
                             } else {
                                 if(o.latestChapter.url !== newData.url) {
@@ -81,7 +78,7 @@ class Bot {
                                 return null;
                             }
                         }, e => {
-                            console.error(e);
+                            //console.error(e);
                             end();
                         });
                 }
@@ -93,11 +90,11 @@ class Bot {
                     }
                     end();
                 }, e => {
-                    console.error(e);
+                    //console.error(e);
                     end();
                 })
                 .catch(e => {
-                    console.error(e);
+                    //console.error(e);
                     end();
                 });
            },  delay);

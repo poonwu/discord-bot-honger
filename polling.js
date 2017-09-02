@@ -54,7 +54,7 @@ let pollings = {
       
       // span of time in hour (0-24)
       if(s(20, 22)) {
-        return 10000;
+        return 15000;
       }
       if(s(22, 6)) {
         return 10000;
