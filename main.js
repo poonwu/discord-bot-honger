@@ -121,7 +121,7 @@ class Bot {
             this.startTime = moment();
             this.lastPollingTime = moment();
             this.runPoll();
-            //this.changeDelayInterval.run();
+            this.changeDelayInterval.run();
             this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
