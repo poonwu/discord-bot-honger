@@ -54,13 +54,13 @@ let pollings = {
       
       // span of time in hour (0-24)
       if(s(20, 22)) {
-        return 8000;
+        return 10000;
       }
       if(s(22, 6)) {
-        return 6000;
+        return 10000;
       }
 
-      return 10000;
+      return 20000;
     }
   },
   'free': {
@@ -89,7 +89,7 @@ let pollings = {
       bot.runPoll('lnmtl');
       return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
     },
-    delay: 5000,
+    delay: 10000,
     axiosOptions: {
       responseType: 'arraybuffer',
       transformResponse: function(data) {
@@ -126,7 +126,7 @@ let pollings = {
       bot.stopPoll('lnmtl');
       return '@everyone, LNMTL is up!!!\n' + this.latestChapter.url;
     },
-    delay: 5000
+    delay: 10000
   },
   'htl': {
     alias: ['h', 'ww', 'alyschu'],

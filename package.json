@@ -30,7 +30,8 @@
     "moment-timezone": "^0.5.13"
   },
   "engines": {
-    "node": "7.9.0"
+    "node": "7.9.0",
+    "npm": "5.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
