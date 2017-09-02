@@ -14,7 +14,7 @@ const config = require('./config.json');
 moment.tz.setDefault('Asia/Shanghai');
 
 // set default request timeout
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 10000;
 
 class Bot {
     constructor() {
@@ -46,7 +46,6 @@ class Bot {
                                 return null;
                             } else {
                                 let newData = null;
-                                console.log(res);
                                 res.forEach(e => {
                                     if(e.title !== o.latestChapter.title) {
                                         newData = e;
