@@ -9,7 +9,7 @@ const moment = require('moment-timezone');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
 
 moment.tz.setDefault('Asia/Shanghai');
 
@@ -27,44 +27,80 @@ class Bot {
             o.asyncPolling = AsyncPolling(end => {
                 // save current time
                 this.lastPollingTime = moment();
-                axios.get(o.url, o.axiosOptions)
-                    .then(res => {
-                        // return null if you don't want it to reports.
-                        let newData = o.parseData(this, res.data);
-                        if(!o.latestChapter) {
-                            // first time
-                            o.latestChapter = newData;
-                            o.onLoadChapter(this);
-                            o.lastChapterTime = moment();
-                            return null;
-                        } else {
-                            console.log(o.latestChapter.url, newData.url);
-                            if(o.latestChapter.url !== newData.url) {
-                                o.latestChapter = newData;
-                                return o;
-                            }
-                            return null;
-                        }
-                    }, e => {
-                        console.error(e);
-                        end();
-                    })
-                    .then(o => {
-                        if(_.isObject(o)) {
-                            let str = o.onNewChapter(this);
-                            this.broadcast(str, 'notices');
-                        }
-                        end();
-                    }, e => {
-                        console.error(e);
-                        end();
-                    })
-                    .catch(e => {
-                        console.error(e);
-                        end();
+                let promise = null;
+
+                if(_.isArray(o.url)) {
+                    let all = o.url.map((url, i) => {
+                        return axios.get(url, o.axiosOptions)
+                            .then( res=> {
+                                return o.parseData[i](this, res.data);
+                            })
                     });
 
-            },  delay);
+                    promise = axios.all(all)
+                        .then(res => {
+                            if(!o.latestChapter) {
+                                o.latestChapter = res[0];
+                                o.onLoadChapter(this);
+                                o.lastChapterTime = moment();
+                                return null;
+                            } else {
+                                let newData = null;
+                                console.log(res);
+                                res.forEach(e => {
+                                    if(e.title !== o.latestChapter.title) {
+                                        newData = e;
+                                    }
+                                });
+                                if(newData) {
+                                    o.latestChapter = newData;
+                                }
+                                return newData ? o : null;
+                            }
+                        }, e => {
+                            console.error(e);
+                            end();
+                        });
+                }
+                else {
+                    promise = axios.get(o.url, o.axiosOptions)
+                        .then(res => {
+                            // return null if you don't want it to reports.
+                            let newData = o.parseData(this, res.data);
+                            if(!o.latestChapter) {
+                                // first time
+                                o.latestChapter = newData;
+                                o.onLoadChapter(this);
+                                o.lastChapterTime = moment();
+                                return null;
+                            } else {
+                                if(o.latestChapter.url !== newData.url) {
+                                    o.latestChapter = newData;
+                                    return o;
+                                }
+                                return null;
+                            }
+                        }, e => {
+                            console.error(e);
+                            end();
+                        });
+                }
+
+                promise.then(o => {
+                    if(_.isObject(o)) {
+                        let str = o.onNewChapter(this);
+                        this.broadcast(str, 'notices');
+                    }
+                    end();
+                }, e => {
+                    console.error(e);
+                    end();
+                })
+                .catch(e => {
+                    console.error(e);
+                    end();
+                });
+           },  delay);
         });
 
         this.changeDelayInterval = AsyncPolling(end => {

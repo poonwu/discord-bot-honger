@@ -77,17 +77,23 @@ let pollings = {
     }
   },
   'free': {
-    alias: ['z'],
-    url: 'http://m.zwda.com/nitianxieshen/',
-    parseData: function(bot, data) {
+    alias: ['f'],
+    url: ['http://m.zwda.com/nitianxieshen/', 'http://m.piaotian.com/book/6760.html'],
+    parseData: [function(bot, data) {
       let $ = cheerio.load(data);
       let tag = $('.block_txt2 > p').last().find('a');
-      //console.log(_.map(tag.text(), e => e.toString(2)));
       return {
-        title: tag.text(),
+        title: tag.text().trim(),
         url: 'http://www.zwda.com' + tag.attr('href')
       };
-    },
+    }, function(bot, data) {
+      let $ = cheerio.load(data);
+      let tag = $('.block_txt2 > p').last().find('a');
+      return {
+        title: tag.text().trim(),
+        url: 'http://www.piaotian.com' + tag.attr('href')
+      };
+    }],
     onLoadChapter: function(bot) {
       bot.stopPoll('free');
     },
