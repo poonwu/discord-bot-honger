@@ -52,25 +52,12 @@ let pollings = {
       // spanning object
       let s = span(moment());
       
-      // hour since last release
-      let elapseHour = diff(moment(), this.latestChapterTime);
-      
-      
-      if(elapseHour < 3) {
-        elapseHour = 3;
-      } else {
-        elapseHour = 1;
-      }
-      
       // span of time in hour (0-24)
       if(s(20, 22)) {
-        return 5000 * elapseHour;
+        return 8000;
       }
-      if(s(22, 4)) {
-        return 2000 * elapseHour;
-      }
-      if(s(4, 6)) {
-        return 5000 * elapseHour;
+      if(s(22, 6)) {
+        return 6000;
       }
 
       return 10000;
@@ -102,7 +89,7 @@ let pollings = {
       bot.runPoll('lnmtl');
       return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
     },
-    delay: 3000,
+    delay: 5000,
     axiosOptions: {
       responseType: 'arraybuffer',
       transformResponse: function(data) {
