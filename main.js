@@ -5,40 +5,78 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 const http = require('http');
 const math = require('mathjs');
-const moment = require('moment');
-const gbk = require('gbk');
+const moment = require('moment-timezone');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
 const config = require('./config.json');
+
+moment.tz.setDefault('Asia/Shanghai');
 
 // set default request timeout
 axios.defaults.timeout = 5000;
 
 class Bot {
     constructor() {
-        this.store = {};
         this.client = new Discord.Client();
-        this.polling = AsyncPolling(end => {
-            this.lastPollingTime = moment();
-            axios.all(_.map(pollingList, o => this.getPollingHandler(o)))
-            .then((res) => {
-                res.forEach(e => {
-                    if(_.isObject(e)) {
-                        let str = e.onSuccess(this, this.store[e.name], e);
-                        this.broadcast(str, 'notices');
+        this.pollingList = pollingList;
+
+        // create pollings
+        _.forOwn(this.pollingList, (o, k) => {
+            let delay = _.isNumber(o.delay) ? o.delay : _.isFunction(o.delay) ? o.delay() : null;
+            o.asyncPolling = AsyncPolling(end => {
+                // save current time
+                this.lastPollingTime = moment();
+                axios.get(o.url, o.axiosOptions)
+                    .then(res => {
+                        // return null if you don't want it to reports.
+                        let newData = o.parseData(this, res.data);
+                        if(!o.latestChapter) {
+                            // first time
+                            o.latestChapter = newData;
+                            o.onLoadChapter(this);
+                            o.lastChapterTime = moment();
+                            return null;
+                        } else {
+                            console.log(o.latestChapter.url, newData.url);
+                            if(o.latestChapter.url !== newData.url) {
+                                o.latestChapter = newData;
+                                return o;
+                            }
+                            return null;
+                        }
+                    }, e => {
+                        console.error(e);
+                        end();
+                    })
+                    .then(o => {
+                        if(_.isObject(o)) {
+                            let str = o.onNewChapter(this);
+                            this.broadcast(str, 'notices');
+                        }
+                        end();
+                    }, e => {
+                        console.error(e);
+                        end();
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        end();
+                    });
+
+            },  delay);
+        });
+
+        this.changeDelayInterval = AsyncPolling(end => {
+            _.forOwn(this.pollingList, o => {
+                if(_.isFunction(o.delay)) {
+                    let newDelay = o.delay();
+                    if(newDelay !== o.asyncPolling._delay) {
+                        o.asyncPolling._delay = newDelay;
                     }
-                });
-                end();
-            }, (err) => {
-                console.error(err);
-                end();
-            })
-            .catch((e) => {
-                console.error(e);
-                end();
+                }
             });
-        }, 30000);
+        }, 60000 * 10);
 
         // on ready
         this.client.on('ready', () => {
@@ -47,7 +85,8 @@ class Bot {
     
             this.startTime = moment();
             this.lastPollingTime = moment();
-            this.polling.run();
+            this.runPoll();
+            //this.changeDelayInterval.run();
             this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
@@ -107,30 +146,6 @@ class Bot {
             }
         });
     }
-
-    getPollingHandler(pollingObject) {
-        return axios.get(pollingObject.url)
-            .then((res) => {
-                // return null if you don't want it to reports.
-                let newData = pollingObject.parseData(this, cheerio.load(res.data));
-                if(!this.store[pollingObject.name]) {
-                    // first time
-                    this.store[pollingObject.name] = newData;
-                    return null;
-                } else {
-                    let oldUrl = this.store[pollingObject.name].url;
-                    let newUrl = newData.url;
-                    if(oldUrl !== newUrl) {
-                        this.store[pollingObject.name] = newData;
-                        return pollingObject;
-                    }
-                    return null;
-                }
-            })
-            .catch(() => {
-                return null;
-            });
-    }
     broadcast(content, name) {
         this.client.guilds.array().forEach(g => {
             let channel = g.channels.find('name', name || 'talk-to-honger');
@@ -149,6 +164,22 @@ class Bot {
 
         // connect to discord
         this.client.login(config.token);
+    }
+    runPoll(name) {
+        if(name) {
+            this.pollingList[name].asyncPolling.run()
+        }
+        else {
+            _.forOwn(this.pollingList, e => e.asyncPolling ? e.asyncPolling.run() : null);
+        }
+    }
+    stopPoll(name) {
+        if(name) {
+            this.pollingList[name].asyncPolling.stop();
+        }
+        else {
+            _.forOwn(this.pollingList, e => e.asyncPolling ? e.asyncPolling.stop() : null);
+        }
     }
 }
 

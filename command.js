@@ -1,52 +1,22 @@
 const poll = require('./polling.js');
 const Discord = require('discord.js');
 const math = require('mathjs');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const _ = require('lodash');
+
+moment.tz.setDefault('Asia/Shanghai');
 
 var checkOptions = _.keys(poll);
 var commands = {
-  'timeout_1': {
-    description: 'Set new polling timeout in second (min=5)',
-    args: ['NEW_TIMEOUT'],
-    action: function(bot, msg, time) {
-      try {
-        let delay = parseInt(time) * 1000;
-        
-        if(isNaN(delay)) {
-          throw new Error();
-        }
-        
-        if(delay < 20000) {
-           delay = 20000;
-        }
-        bot.polling.stop();
-        bot.polling._delay = delay;
-        bot.polling.run();
-        
-        msg.channel.send('timeout=' + (delay/1000) + 's');
-        return true;
-      }
-      catch(e) {
-        return false;
-      }
-    }
-  },
-  'poll_1': {
-    description: 'Set polling operation',
-    args: ['ON|OFF|RESET'],
-    action: function(bot, msg, op) {
-      op = op.toLowerCase();
-
-      if(op === 'off') {
-        bot.polling.stop();
-      } else if(op === 'on' || op === 'reset') {
-        bot.polling.stop();
-        bot.polling.run();
-      }
-
-      msg.channel.send('polling=' + (bot.polling._mustSchedule ? 'ON' : 'OFF'));
-      return true;
+  'reset': {
+    description: 'Reset current chapter data, in case data are missing.',
+    action: function(bot, msg) {
+      bot.stopPoll();
+      _.forOwn(bot.pollingList, v => {
+        v.latestChapter = undefined;
+      });
+      bot.runPoll();
+      msg.channel.send('reset completed');
     }
   },
   'status_0' : {
@@ -55,10 +25,11 @@ var commands = {
       let content = '';
       let duration = moment.duration(moment().diff(bot.startTime));
       let pollDuration = moment.duration(moment().diff(bot.lastPollingTime));
-      content += `Polling: **${bot.polling._mustSchedule ? 'ON' : 'OFF'}**\n`;
-      content += `Timeout: **${bot.polling._delay / 1000}** seconds\n`;
-      content += `Last Polled: **${Math.round(pollDuration.asSeconds())}** seconds ago\n`;
+      content += `Last Poll: **${Math.round(pollDuration.asSeconds())}** seconds ago\n`;
       content += `Running time: **${duration.hours()}**h **${duration.minutes()}**m **${duration.seconds()}**s\n`;
+      _.forOwn(bot.pollingList, (v,k) => {
+        content += k.toUpperCase() + ': **' + (v.asyncPolling._mustSchedule ? (v.asyncPolling._delay/1000 + '**s') : 'OFF**') + '\n';
+      });
       msg.channel.send(content);
       return true;
     }
@@ -76,11 +47,11 @@ var commands = {
       // check all 
       if(_.has(poll, name)) {
         // normal render
-        content = this.render(bot, bot.store[name]);
+        content = this.render(bot, bot.pollingList[name]);
       }
-      else if(o = _.find(poll, e => _.indexOf(e.alias, name) >= 0 )) {
+      else if((o = _.findIndex(checkOptions, e => e.startsWith(name)) ) >= 0) {
         // aliasing
-        content = this.render(bot, bot.store[o.name]);
+        content = this.render(bot, bot.pollingList[checkOptions[o]]);
       }  
       else {
         // render everything
@@ -88,7 +59,7 @@ var commands = {
           .setTitle('Current Chapters')
           .setColor(0xc70000);
         checkOptions.forEach(name => {
-          embed.addField(name.toUpperCase() + ' ' + (bot.store[name] || {}).title, (bot.store[name] || {}).url);
+          embed.addField(name.toUpperCase() + ' ' + (bot.pollingList[name].latestChapter || {}).title, (bot.pollingList[name].latestChapter || {}).url);
         });
         
         // render rich text
@@ -128,7 +99,12 @@ var commands = {
       msg.channel.send(content);
       return true;
     }
-  }
+  },
+  // 'test': {
+  //   action: function(bot, msg, name) {
+  //     bot.pollingList[name].latestChapter.url = 'something else';
+  //   }
+  // }
 };
 
 module.exports = commands;

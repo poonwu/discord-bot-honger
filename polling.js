@@ -1,22 +1,114 @@
 const _ = require('lodash');
-const gbk = require('gbk');
 const Discord = require('discord.js');
+const moment = require('moment-timezone');
+const cheerio = require('cheerio');
+const iconv = require('iconv-lite');
+
+moment.tz.setDefault('Asia/Shanghai');
+
+// get span object for checking between hour-time
+function span(now) {
+  today = moment(now).startOf('day');
+  tmrow = moment(today).add(1, 'd');
+
+  return function(from, to) {
+    let f = moment(today);
+    let t = moment(today);
+    if(from > to) {
+      t = moment(tmrow);
+    }
+
+    // prevent overlapping
+    f.add(1, 'ms');
+
+    f.hour(from);
+    t.hour(to);
+
+    return now.isBetween(f, t);
+  }
+}
+
+// diff between two time as hour with decimals
+function diff(a, b) {
+  return moment.duration(a.diff(b)).asHours;
+}
+
 let pollings = {
   'raw': {
-    name: 'raw',
     alias: ['r'],
-    url: 'http://book.zongheng.com/book/408586.html',
-    parseData: function(bot, $) {
-      let title = $('a.chap').clone().children().remove().end().text().split('：')[1].trim();
-      let url = $('a.chap').attr('href');
-      return {title, url};
+    url: 'https://m.zongheng.com/h5/ajax/chapter/list?h5=1&bookId=408586&pageNum=1&pageSize=1&chapterId=0&asc=1',
+    parseData: function(bot, data) {
+      // now is zongheng format
+      return {
+        title: data.chapterlist.chapters[0].chapterName,
+        url: `http://book.zongheng.com/chapter/408586/${data.chapterlist.chapters[0].chapterId}.html`
+      }
+    },
+    onNewChapter: function(bot) {
+      bot.runPoll('free');
+      return '@everyone, New Chapter from RAW!!!\n' + this.latestChapter.url;
+    },
+    delay: function() {
+      // spanning object
+      let s = span(moment());
+      
+      // hour since last release
+      let elapseHour = diff(moment(), this.latestChapterTime);
+      
+      
+      if(elapseHour < 3) {
+        elapseHour = 3;
+      } else {
+        elapseHour = 1;
+      }
+      
+      // span of time in hour (0-24)
+      if(s(20, 22)) {
+        return 5000 * elapseHour;
+      }
+      if(s(22, 4)) {
+        return 2000 * elapseHour;
+      }
+      if(s(4, 6)) {
+        return 5000 * elapseHour;
+      }
+
+      return 10000;
+    }
+  },
+  'free': {
+    alias: ['z'],
+    url: 'http://m.zwda.com/nitianxieshen/',
+    parseData: function(bot, data) {
+      let $ = cheerio.load(data);
+      let tag = $('.block_txt2 > p').last().find('a');
+      //console.log(_.map(tag.text(), e => e.toString(2)));
+      return {
+        title: tag.text(),
+        url: 'http://www.zwda.com' + tag.attr('href')
+      };
+    },
+    onLoadChapter: function(bot) {
+      bot.stopPoll('free');
+    },
+    onNewChapter: function(bot) {
+      bot.stopPoll('free');
+      bot.runPoll('lnmtl');
+      return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
+    },
+    delay: 3000,
+    axiosOptions: {
+      responseType: 'arraybuffer',
+      transformResponse: function(data) {
+        return iconv.decode(data, 'gbk');
+      }
     }
   },
   'lnmtl': {
-    name: 'lnmtl',
     alias: ['m', 'mtl'],
     url: 'https://lnmtl.com/novel/against-the-gods',
-    parseData: function(bot, $) {
+    parseData: function(bot, data) {
+      let $ = cheerio.load(data);
       let newArray = [];
 
       // get list of all latest chapters on lnmtl page
@@ -33,46 +125,44 @@ let pollings = {
       let url = latest.url;
       let title = latest.title;
       return {url, title};
-    }
+    },
+    onLoadChapter: function(bot) {
+      bot.stopPoll('lnmtl');
+    },
+    onNewChapter: function(bot) {
+      bot.stopPoll('lnmtl');
+      return '@everyone, LNMTL is up!!!\n' + this.latestChapter.url;
+    },
+    delay: 5000
   },
   'htl': {
-    name: 'htl',
     alias: ['h', 'ww', 'alyschu'],
     url: 'http://www.wuxiaworld.com/category/atg-chapter-release/',
-    parseData: function(bot, $) {
+    parseData: function(bot, data) {
+      let $ = cheerio.load(data);
       let sel = $('article.category-atg-chapter-release').first();
       let url = sel.find('.entry-content a[href^="http://www.wuxiaworld.com/atg-index/"]').attr('href');
       let title = sel.find('.entry-title').text().trim();
 
       return {url, title};
     },
-    onSuccess: function(bot, store) {
-      return 'New chapter from htl!!!\n' + store.url;
-    }
-  },
-  // 'piaotian': {
-  //   name: 'piaotian',
-  //   alias: ['p', 'pi', 'pt'],
-  //   url: 'http://www.piaotian.com/bookinfo/6/6760.html',
-  //   parseData: function(bot, $) {
-  //     let sel = $('li>a[href^="http://www.piaotian.com/html/"]').first();
-  //     let url = sel.attr('href');
-  //     let title = sel.text();
-
-  //     console.log(title);
-
-  //     return {url, title};
-  //   },
-  //   charset: 'gbk'
-  // }
+    onNewChapter: function(bot) {
+      return 'New Chapter from HTL!!!\n' + this.latestChapter.url;
+    },
+    delay: 60000 * 5 //every 5 min
+  }
 };
 
 
+// defaults
 _.forOwn(pollings, (v,k) => {
   _.defaults(v, {
-    onSuccess: function(bot, store, obj) {
-      return '@everyone, New Chapter from ' + obj.name + '!!!\n' + store.url;
-    }
+    onLoadChapter: function() {},
+    onNewChapter: function(bot) {
+      return '@everyone, New Chapter from ' + obj.name + '!!!\n' + this.latestChapter.url;
+    },
+    asyncPolling: null,
+    lastChapterTime: null,
   });
 });
 module.exports = pollings;
