@@ -27,13 +27,15 @@
     "lodash": "^4.17.4",
     "mathjs": "^3.16.1",
     "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13"
+    "moment-timezone": "^0.5.13",
+    "v8-profiler": "^5.7.0"
   },
   "engines": {
     "node": "7.9.0",
-    "npm": "5.3.0"
+    "npm": "5.0.3"
   },
   "devDependencies": {
+    "forever": "^0.15.3",
     "nodemon": "^1.11.0"
   }
 }

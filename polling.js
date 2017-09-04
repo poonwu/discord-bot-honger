@@ -48,20 +48,7 @@ let pollings = {
       bot.runPoll('free');
       return '@everyone, New Chapter from RAW!!!\n' + this.latestChapter.url;
     },
-    delay: function() {
-      // spanning object
-      let s = span(moment());
-      
-      // span of time in hour (0-24)
-      if(s(20, 22)) {
-        return 15000;
-      }
-      if(s(22, 6)) {
-        return 10000;
-      }
-
-      return 20000;
-    }
+    delay: 15000
   },
   'free': {
     alias: ['f'],
@@ -89,7 +76,7 @@ let pollings = {
       bot.runPoll('lnmtl');
       return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
     },
-    delay: 10000,
+    delay: 15000,
     axiosOptions: {
       responseType: 'arraybuffer',
       transformResponse: function(data) {
@@ -126,7 +113,7 @@ let pollings = {
       bot.stopPoll('lnmtl');
       return '@everyone, LNMTL is up!!!\n' + this.latestChapter.url;
     },
-    delay: 10000
+    delay: 15000
   },
   'htl': {
     alias: ['h', 'ww', 'alyschu'],

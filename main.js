@@ -11,10 +11,9 @@ const pollingList = require('./polling.js');
 const pkg = require('./package.json');
 const config = require('./config.json');
 
-moment.tz.setDefault('Asia/Shanghai');
+require('v8-profiler');
 
-// set default request timeout
-axios.defaults.timeout = 5000;
+moment.tz.setDefault('Asia/Shanghai');
 
 class Bot {
     constructor() {
@@ -31,7 +30,7 @@ class Bot {
 
                 if(_.isArray(o.url)) {
                     let all = o.url.map((url, i) => {
-                        return axios.get(url, o.axiosOptions)
+                        return axios.get(url, _.extend(o.axiosOptions, { httpAgent: false, httpsAgent: false }))
                             .then( res=> {
                                 return o.parseData[i](this, res.data);
                             });
@@ -56,12 +55,12 @@ class Bot {
                                 return newData ? o : null;
                             }
                         }, e => {
-                            //console.error(e);
+                            console.error(e);
                             end();
                         });
                 }
                 else {
-                    promise = axios.get(o.url, o.axiosOptions)
+                    promise = axios.get(o.url, _.extend(o.axiosOptions, { httpAgent: false, httpsAgent: false }))
                         .then(res => {
                             // return null if you don't want it to reports.
                             let newData = o.parseData(this, res.data);
@@ -78,7 +77,9 @@ class Bot {
                                 return null;
                             }
                         }, e => {
-                            //console.error(e);
+                            //timeout constantly...
+                            
+                            console.error(e);
                             end();
                         });
                 }
@@ -90,11 +91,13 @@ class Bot {
                     }
                     end();
                 }, e => {
-                    //console.error(e);
+                    console.log('95')
+                    console.error(e);
                     end();
                 })
                 .catch(e => {
-                    //console.error(e);
+                    console.log('99')
+                    console.error(e);
                     end();
                 });
            },  delay);
@@ -119,7 +122,6 @@ class Bot {
             this.startTime = moment();
             this.lastPollingTime = moment();
             this.runPoll();
-            this.changeDelayInterval.run();
             this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
