@@ -2,7 +2,6 @@ const _ = require('lodash');
 const Discord = require('discord.js');
 const moment = require('moment-timezone');
 const cheerio = require('cheerio');
-const iconv = require('iconv-lite');
 
 moment.tz.setDefault('Asia/Shanghai');
 
@@ -48,11 +47,21 @@ let pollings = {
       bot.runPoll('free');
       return '@everyone, New Chapter from RAW!!!\n' + this.latestChapter.url;
     },
-    delay: 15000
+    delay: function() {
+      let s = span(moment());
+
+      if(s(22,24)) {
+        return 5000;
+      }
+      if(s(0,4)) {
+        return 5000;
+      }
+      return 15000;
+    }
   },
   'free': {
     alias: ['f'],
-    url: ['http://m.zwda.com/nitianxieshen/', 'http://m.piaotian.com/book/6760.html'],
+    url: ['http://m.zwda.com/nitianxieshen/', 'http://www.piaotian.com/bookinfo/6/6760.html'],
     parseData: [function(bot, data) {
       let $ = cheerio.load(data);
       let tag = $('.block_txt2 > p').last().find('a');
@@ -62,10 +71,10 @@ let pollings = {
       };
     }, function(bot, data) {
       let $ = cheerio.load(data);
-      let tag = $('.block_txt2 > p').last().find('a');
+      let tag = $('span.hottext:contains("最新章节：")').next();
       return {
         title: tag.text().trim(),
-        url: 'http://www.piaotian.com' + tag.attr('href')
+        url: tag.attr('href')
       };
     }],
     onLoadChapter: function(bot) {
@@ -78,10 +87,7 @@ let pollings = {
     },
     delay: 15000,
     axiosOptions: {
-      responseType: 'arraybuffer',
-      transformResponse: function(data) {
-        return iconv.decode(data, 'gbk');
-      }
+      encoding: 'gbk'
     }
   },
   'lnmtl': {

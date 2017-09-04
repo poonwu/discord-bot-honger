@@ -2,14 +2,14 @@ const _ = require('lodash');
 const Discord = require('discord.js');
 const AsyncPolling = require('async-polling');
 const cheerio = require('cheerio');
-const axios = require('axios');
+const axios = require('./hyper.js');
 const http = require('http');
 const math = require('mathjs');
 const moment = require('moment-timezone');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
 
 require('v8-profiler');
 
@@ -30,7 +30,7 @@ class Bot {
 
                 if(_.isArray(o.url)) {
                     let all = o.url.map((url, i) => {
-                        return axios.get(url, _.extend(o.axiosOptions, { httpAgent: false, httpsAgent: false }))
+                        return axios.get(url, o.axiosOptions)
                             .then( res=> {
                                 return o.parseData[i](this, res.data);
                             });
@@ -60,7 +60,7 @@ class Bot {
                         });
                 }
                 else {
-                    promise = axios.get(o.url, _.extend(o.axiosOptions, { httpAgent: false, httpsAgent: false }))
+                    promise = axios.get(o.url, o.axiosOptions)
                         .then(res => {
                             // return null if you don't want it to reports.
                             let newData = o.parseData(this, res.data);
@@ -121,6 +121,7 @@ class Bot {
     
             this.startTime = moment();
             this.lastPollingTime = moment();
+            this.changeDelayInterval.run();
             this.runPoll();
             this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });

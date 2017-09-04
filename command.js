@@ -100,11 +100,13 @@ var commands = {
       return true;
     }
   },
-  // 'test': {
-  //   action: function(bot, msg, name) {
-  //     bot.pollingList[name].latestChapter.url = 'something else';
-  //   }
-  // }
+  'test': {
+    action: function(bot, msg, name) {
+      bot.pollingList[name].latestChapter.title = 'something else';
+      bot.pollingList[name].latestChapter.url = 'something else';
+      console.log(bot.pollingList[name].latestChapter);
+    }
+  }
 };
 
 module.exports = commands;
