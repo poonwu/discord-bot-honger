@@ -1,6 +1,6 @@
 {
   "name": "discord-bot-honger",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Hong'er bot",
   "main": "main.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "bluebird": "^3.5.0",
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.1.0",
+    "humanize-duration": "^3.10.1",
     "hyperquest": "^2.1.2",
     "iconv-lite": "^0.4.18",
     "lodash": "^4.17.4",

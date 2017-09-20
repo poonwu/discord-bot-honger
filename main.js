@@ -9,7 +9,7 @@ const moment = require('moment-timezone');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.test.json');
+const config = require('./config.json');
 
 require('v8-profiler');
 
@@ -112,6 +112,7 @@ class Bot {
                     }
                 }
             });
+            end();
         }, 60000 * 10);
 
         // on ready
@@ -123,7 +124,7 @@ class Bot {
             this.lastPollingTime = moment();
             this.changeDelayInterval.run();
             this.runPoll();
-            this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
+            //this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
         
         // msg listener

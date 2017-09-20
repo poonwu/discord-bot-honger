@@ -44,101 +44,100 @@ let pollings = {
       }
     },
     onNewChapter: function(bot) {
-      bot.runPoll('free');
+      //bot.runPoll('free');
       return '@everyone, New Chapter from RAW!!!\n' + this.latestChapter.url;
     },
     delay: function() {
       let s = span(moment());
 
       if(s(22,24)) {
-        return 5000;
+        return 20000;
       }
       if(s(0,4)) {
-        return 5000;
+        return 20000;
       }
-      return 15000;
+      return 30000;
     }
   },
-  'free': {
-    alias: ['f'],
-    url: ['http://m.zwda.com/nitianxieshen/', 'http://www.piaotian.com/bookinfo/6/6760.html'],
-    parseData: [function(bot, data) {
-      let $ = cheerio.load(data);
-      let tag = $('.block_txt2 > p').last().find('a');
-      return {
-        title: tag.text().trim(),
-        url: 'http://www.zwda.com' + tag.attr('href')
-      };
-    }, function(bot, data) {
-      let $ = cheerio.load(data);
-      let tag = $('span.hottext:contains("最新章节：")').next();
-      return {
-        title: tag.text().trim(),
-        url: tag.attr('href')
-      };
-    }],
-    onLoadChapter: function(bot) {
-      bot.stopPoll('free');
-    },
-    onNewChapter: function(bot) {
-      bot.stopPoll('free');
-      bot.runPoll('lnmtl');
-      return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
-    },
-    delay: 15000,
-    axiosOptions: {
-      encoding: 'gbk'
-    }
-  },
-  'lnmtl': {
-    alias: ['m', 'mtl'],
-    url: 'https://lnmtl.com/novel/against-the-gods',
-    parseData: function(bot, data) {
-      let $ = cheerio.load(data);
-      let newArray = [];
+  // 'free': {
+  //   alias: ['f'],
+  //   url: ['http://m.zwda.com/nitianxieshen/', 'http://www.piaotian.com/bookinfo/6/6760.html'],
+  //   parseData: [function(bot, data) {
+  //     let $ = cheerio.load(data);
+  //     let tag = $('.block_txt2 > p').last().find('a');
+  //     return {
+  //       title: tag.text().trim(),
+  //       url: 'http://www.zwda.com' + tag.attr('href')
+  //     };
+  //   }, function(bot, data) {
+  //     let $ = cheerio.load(data);
+  //     let tag = $('span.hottext:contains("最新章节：")').next();
+  //     return {
+  //       title: tag.text().trim(),
+  //       url: tag.attr('href')
+  //     };
+  //   }],
+  //   onLoadChapter: function(bot) {
+  //     bot.stopPoll('free');
+  //   },
+  //   onNewChapter: function(bot) {
+  //     bot.stopPoll('free');
+  //     bot.runPoll('lnmtl');
+  //     return '<@244072217623658506>, Free RAW is Up!!!\n' + this.latestChapter.url;
+  //   },
+  //   delay: 20000,
+  //   axiosOptions: {
+  //     encoding: 'gbk'
+  //   }
+  // },
+  // 'lnmtl': {
+  //   alias: ['m', 'mtl'],
+  //   url: 'https://lnmtl.com/novel/against-the-gods',
+  //   parseData: function(bot, data) {
+  //     let $ = cheerio.load(data);
+  //     let newArray = [];
 
-      // get list of all latest chapters on lnmtl page
-      $('a.chapter-link').each(function() {
-        let url = $(this).attr('href');
-        let title = $(this).text().trim().replace('  ', ' ');
-        let date = $(this).parent().next().find('span.label-default').text().trim();
+  //     // get list of all latest chapters on lnmtl page
+  //     $('a.chapter-link').each(function() {
+  //       let url = $(this).attr('href');
+  //       let title = $(this).text().trim().replace('  ', ' ');
+  //       let date = $(this).parent().next().find('span.label-default').text().trim();
 
-        newArray.push({url, title, date});
-      });
+  //       newArray.push({url, title, date});
+  //     });
 
-      // latest release
-      let latest =  _.reverse(_.sortBy(newArray, 'date'))[0];
-      let url = latest.url;
-      let title = latest.title;
-      return {url, title};
-    },
-    onLoadChapter: function(bot) {
-      bot.stopPoll('lnmtl');
-    },
-    onNewChapter: function(bot) {
-      bot.stopPoll('lnmtl');
-      return '@everyone, LNMTL is up!!!\n' + this.latestChapter.url;
-    },
-    delay: 15000
-  },
-  'htl': {
-    alias: ['h', 'ww', 'alyschu'],
-    url: 'http://www.wuxiaworld.com/category/atg-chapter-release/',
-    parseData: function(bot, data) {
-      let $ = cheerio.load(data);
-      let sel = $('article.category-atg-chapter-release').first();
-      let url = sel.find('.entry-content a[href^="http://www.wuxiaworld.com/atg-index/"]').attr('href');
-      let title = sel.find('.entry-title').text().trim();
+  //     // latest release
+  //     let latest =  _.reverse(_.sortBy(newArray, 'date'))[0];
+  //     let url = latest.url;
+  //     let title = latest.title;
+  //     return {url, title};
+  //   },
+  //   onLoadChapter: function(bot) {
+  //     bot.stopPoll('lnmtl');
+  //   },
+  //   onNewChapter: function(bot) {
+  //     bot.stopPoll('lnmtl');
+  //     return '@everyone, LNMTL is up!!!\n' + this.latestChapter.url;
+  //   },
+  //   delay: 20000
+  // },
+  // 'htl': {
+  //   alias: ['h', 'ww', 'alyschu'],
+  //   url: 'http://www.wuxiaworld.com/category/atg-chapter-release/',
+  //   parseData: function(bot, data) {
+  //     let $ = cheerio.load(data);
+  //     let sel = $('article.category-atg-chapter-release').first();
+  //     let url = sel.find('.entry-content a[href^="http://www.wuxiaworld.com/atg-index/"]').attr('href');
+  //     let title = sel.find('.entry-title').text().trim();
 
-      return {url, title};
-    },
-    onNewChapter: function(bot) {
-      return 'New Chapter from HTL!!!\n' + this.latestChapter.url;
-    },
-    delay: 60000 * 5 //every 5 min
-  }
+  //     return {url, title};
+  //   },
+  //   onNewChapter: function(bot) {
+  //     return 'New Chapter from HTL!!!\n' + this.latestChapter.url;
+  //   },
+  //   delay: 60000 * 5 //every 5 min
+  // }
 };
-
 
 // defaults
 _.forOwn(pollings, (v,k) => {

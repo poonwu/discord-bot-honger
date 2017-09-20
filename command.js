@@ -1,6 +1,7 @@
 const poll = require('./polling.js');
 const Discord = require('discord.js');
 const math = require('mathjs');
+const humanize = require('humanize-duration');
 const moment = require('moment-timezone');
 const _ = require('lodash');
 
@@ -100,13 +101,24 @@ var commands = {
       return true;
     }
   },
-  'test': {
-    action: function(bot, msg, name) {
-      bot.pollingList[name].latestChapter.title = 'something else';
-      bot.pollingList[name].latestChapter.url = 'something else';
-      console.log(bot.pollingList[name].latestChapter);
+  'duetime': {
+    action: function(bot, msg) {
+      let now = moment();
+      let midnight = moment(now).add(1,'d').startOf('day');
+
+      let dur = moment.duration(now.diff(midnight));
+
+      msg.channel.send('**' + humanize(dur.asMilliseconds(), {round: true}) + '** left before midnight');
+      return true;
     }
-  }
+  },
+  // 'test': {
+  //   action: function(bot, msg, name) {
+  //     bot.pollingList[name].latestChapter.title = 'something else';
+  //     bot.pollingList[name].latestChapter.url = 'something else';
+  //     console.log(bot.pollingList[name].latestChapter);
+  //   }
+  // }
 };
 
 module.exports = commands;
