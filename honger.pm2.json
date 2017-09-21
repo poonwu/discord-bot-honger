@@ -1,0 +1,6 @@
+{
+    "apps" : [{
+      "name"        : "honger",
+      "script"      : "./main.js"
+    }]
+  }
