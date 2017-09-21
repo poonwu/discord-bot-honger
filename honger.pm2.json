@@ -1,6 +1,8 @@
 {
     "apps" : [{
       "name"        : "honger",
-      "script"      : "./main.js"
+      "script"      : "./main.js",
+      "error_file" : "/dev/null",
+      "out_file": "/dev/null"
     }]
   }
