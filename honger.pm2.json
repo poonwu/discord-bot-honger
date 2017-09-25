@@ -1,7 +1,8 @@
 {
     "apps" : [{
       "name"        : "honger",
-      "script"      : "./main.js"
+      "script"      : "./main.js",
+      "max_memory_restart" : "100M"
 //      "error_file" : "/dev/null",
 //      "out_file": "/dev/null"
     }]
