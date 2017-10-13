@@ -21,7 +21,7 @@ class Bot {
         this.pollingList = pollingList;
 
         setInterval(function() {
-            http.get("https://discord-bot-honger.herokuapp.com/");
+            axios.get("https://discord-bot-honger.herokuapp.com/");
             console.log('pingging heroku');
         }, 300000); // every 5 minutes (300000)
 
