@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const AsyncPolling = require('async-polling');
 const cheerio = require('cheerio');
 const axios = require('./hyper.js');
+const ax = require('axios');
 const http = require('http');
 const math = require('mathjs');
 const moment = require('moment-timezone');
@@ -20,10 +21,12 @@ class Bot {
         this.client = new Discord.Client();
         this.pollingList = pollingList;
 
-        setInterval(function() {
-            axios.get("https://discord-bot-honger.herokuapp.com/");
+        let f = function() {
+            ax.get("https://discord-bot-honger.herokuapp.com/");
             console.log('pingging heroku');
-        }, 300000); // every 5 minutes (300000)
+        };
+        setInterval(f, 300000); // every 5 minutes (300000)
+        f();
 
         // create pollings
         _.forOwn(this.pollingList, (o, k) => {
