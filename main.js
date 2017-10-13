@@ -10,7 +10,6 @@ const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
 const config = require('./config.json');
-const http = require("http");
 
 require('v8-profiler');
 
@@ -24,7 +23,7 @@ class Bot {
         setInterval(function() {
             http.get("https://discord-bot-honger.herokuapp.com/");
         }, 300000); // every 5 minutes (300000)
-        
+
         // create pollings
         _.forOwn(this.pollingList, (o, k) => {
             let delay = _.isNumber(o.delay) ? o.delay : _.isFunction(o.delay) ? o.delay() : null;
