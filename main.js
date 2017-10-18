@@ -35,68 +35,32 @@ class Bot {
             o.asyncPolling = AsyncPolling(end => {
                 // save current time
                 this.lastPollingTime = moment();
-
-                if(_.isArray(o.url)) {
-                    let all = o.url.map((url, i) => {
-                        return axios.get(url, o.axiosOptions)
-                            .then( res=> {
-                                return o.parseData[i](this, res.data);
-                            });
-                    });
-
-                    promise = axios.all(all)
-                        .then(res => {
-                            if(!o.latestChapter) {
-                                o.latestChapter = res[0] || res[1];
-                                o.onLoadChapter(this);
-                                return null;
-                            } else {
-                                let newData = null;
-                                res.forEach(e => {
-                                    if(e && e.title !== o.latestChapter.title) {
-                                        newData = e;
-                                    }
-                                });
-                                if(newData) {
-                                    o.latestChapter = newData;
-                                }
-                                return newData ? o : null;
-                            }
-                        }, e => {
-                            console.error(e);
-                            end();
-                        });
-                }
-                else {
-                    promise = axios.get(o.url, o.axiosOptions)
-                        .then(res => {
-                            // return null if you don't want it to reports.
-                            let newData = o.parseData(this, res.data);
-                            if(!o.latestChapter) {
-                                // first time
+                promise = axios.get(o.url, o.axiosOptions)
+                    .then(res => {
+                        // return null if you don't want it to reports.
+                        let newData = o.parseData(this, res.data);
+                        if(!o.latestChapter) {
+                            // first time
+                            o.latestChapter = newData;
+                            o.onLoadChapter(this);
+                            return null;
+                        } else {
+                            if(o.latestChapter.url !== newData.url) {
                                 o.latestChapter = newData;
-                                o.onLoadChapter(this);
-                                return null;
-                            } else {
-                                if(o.latestChapter.url !== newData.url) {
-                                    o.latestChapter = newData;
-                                    return o;
-                                }
-                                return null;
+                                return o;
                             }
-                        }, e => {
-                            //timeout constantly...
-                            
-                            console.error(e);
-                            end();
-                        });
-                }
-
-                promise.then(o => {
-                    if(_.isObject(o)) {
-                        let str = o.onNewChapter(this);
-                        this.broadcast(str, 'notices');
-                    }
+                            return null;
+                        }
+                    }, e => {
+                        //timeout constantly...
+                        
+                        console.error(e);
+                        end();
+                    }).then(o => {
+                        if(_.isObject(o)) {
+                            let str = o.onNewChapter(this);
+                            this.broadcast(str, 'notices');
+                        }
                     end();
                 }, e => {
                     console.log('95')
@@ -108,7 +72,7 @@ class Bot {
                     console.error(e);
                     end();
                 });
-           },  delay);
+           },  60000);
         });
 
         this.changeDelayInterval = AsyncPolling(end => {
