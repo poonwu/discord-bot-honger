@@ -22,7 +22,7 @@ class Bot {
         this.pollingList = pollingList;
 
         let f = function() {
-            ax.get("https://discord-bot-honger.herokuapp.com/");
+            //ax.get("https://discord-bot-honger.herokuapp.com/");
             console.log('pingging heroku');
         };
         setInterval(f, 300000); // every 5 minutes (300000)
@@ -63,29 +63,26 @@ class Bot {
                         }
                     end();
                 }, e => {
-                    console.log('95')
-                    console.error(e);
                     end();
                 })
                 .catch(e => {
-                    console.log('99')
-                    console.error(e);
                     end();
                 });
+                
            },  60000);
         });
 
-        this.changeDelayInterval = AsyncPolling(end => {
-            _.forOwn(this.pollingList, o => {
-                if(_.isFunction(o.delay)) {
-                    let newDelay = o.delay();
-                    if(newDelay !== o.asyncPolling._delay) {
-                        o.asyncPolling._delay = newDelay;
-                    }
-                }
-            });
-            end();
-        }, 60000 * 10);
+        // this.changeDelayInterval = AsyncPolling(end => {
+        //     _.forOwn(this.pollingList, o => {
+        //         if(_.isFunction(o.delay)) {
+        //             let newDelay = o.delay();
+        //             if(newDelay !== o.asyncPolling._delay) {
+        //                 o.asyncPolling._delay = newDelay;
+        //             }
+        //         }
+        //     });
+        //     end();
+        // }, 60000 * 10);
 
         // on ready
         this.client.on('ready', () => {
@@ -94,7 +91,7 @@ class Bot {
     
             this.startTime = moment();
             this.lastPollingTime = moment();
-            this.changeDelayInterval.run();
+            //this.changeDelayInterval.run();
             this.runPoll();
             //this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
