@@ -47,7 +47,17 @@ let pollings = {
       //bot.runPoll('free');
       return '@everyone, New Chapter from RAW!!!\n' + this.latestChapter.url;
     },
-    delay: 60000
+    delay: function() {
+      let s = span(moment());
+
+      if(s(22,24)) {
+        return 20000;
+      }
+      if(s(0,4)) {
+        return 20000;
+      }
+      return 30000;
+    }
   },
   // 'free': {
   //   alias: ['f'],

@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node main.js",
+    "start": "node sub.js",
     "watch": "nodemon main.js --watch ."
   },
   "repository": {
@@ -24,6 +24,7 @@
     "bluebird": "^3.5.0",
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.1.0",
+    "express": "^4.16.2",
     "humanize-duration": "^3.10.1",
     "hyperquest": "^2.1.2",
     "iconv-lite": "^0.4.18",

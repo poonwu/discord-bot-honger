@@ -1,0 +1,124 @@
+﻿[    
+    {
+        "Description": "Live",
+        "AppVersion": [
+            {
+                "Platform": "Android",
+                "MaxVersion": "2.68.999",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/Android/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/Android/"
+            },
+            {
+                "Platform": "iOS",
+                "MaxVersion": "2.68.999",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/iOS/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/iOS/"
+            }
+        ],
+        "Server": [
+            {
+                "Name": "Asia",
+                "Opened": true,
+                "Host": "kingsraid-lb-209742857.ap-southeast-1.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "CN",
+                    "TH",
+                    "SG",
+                    "MY",
+                    "VN",
+                    "LA",
+                    "KH",
+                    "ID",
+                    "PH",
+                    "BN"
+                ],
+                "ShutdownMessage": "",
+                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Asia.json"
+            },
+            {
+                "Name": "Europe",
+                "Opened": true,
+                "Host": "kingsraid-europe-lb-810502607.eu-central-1.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "AL", "AD", "AT", "BY", "BE", "BA", "BG", "HR", "CY", "CZ",
+                    "DK", "EE", "FO", "FI", "FR", "DE", "GI", "GR", "HU", "IS",
+                    "IE", "IM", "IT", "RS", "LV", "LI", "LT", "LU", "MK", "MT",
+                    "MD", "MC", "ME", "NL", "NO", "PL", "PT", "RO", "RU", "SM",
+                    "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA", "RS",
+
+                    "DZ", "AO", "SH", "BJ", "BW", "BF", "BI", "CM", "CV", "CF",
+                    "TD", "KM", "CG", "CD", "DJ", "EG", "GQ", "ER", "ET", "GA",
+                    "GM", "GH", "GN", "GW", "CI", "KE", "LS", "LR", "LY", "MG",
+                    "MW", "ML", "MR", "MU", "YT", "MA", "MZ", "NA", "NE", "NG",
+                    "ST", "RE", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS",
+                    "SH", "SD", "SZ", "TZ", "TG", "TN", "UG", "CD", "ZM", "TZ",
+                    "ZW"
+                ],
+                "ShutdownMessage": "",
+                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Europe.json"
+            },            
+            {
+                "Name": "Korea",
+                "Opened": true,
+                "Host": "kingsraid-seoul-lb-130301354.ap-northeast-2.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "KR",
+                    "JP"
+                ],
+                "ShutdownMessage": "",
+                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Korea.json"
+            },
+            {
+                "Name": "America",
+                "Opened": true,
+                "Host": "kingsraid-lb-615969528.us-east-1.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "US",
+                    "CA"
+                ],
+                "ShutdownMessage": "",
+                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/America.json"
+            }
+        ]
+    },
+    {
+        "Description": "For Appstore Review",
+        "AppVersion": [
+            {
+                "Platform": "Android",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
+            },
+            {
+                "Platform": "iOS",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/iOS/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/iOS/"
+            }
+        ],
+        "Server": [
+            {
+                "Name": "NEA",
+                "Opened": true,
+                "Host": "kingsraid-lb-1038076652.ap-northeast-1.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "KR",
+                    "TH",
+                    "CN",
+                    "ID",
+                    "SG",
+                    "US"
+                ]
+            }
+        ]
+    }
+]

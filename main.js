@@ -35,54 +35,93 @@ class Bot {
             o.asyncPolling = AsyncPolling(end => {
                 // save current time
                 this.lastPollingTime = moment();
-                promise = axios.get(o.url, o.axiosOptions)
-                    .then(res => {
-                        // return null if you don't want it to reports.
-                        let newData = o.parseData(this, res.data);
-                        if(!o.latestChapter) {
-                            // first time
-                            o.latestChapter = newData;
-                            o.onLoadChapter(this);
-                            return null;
-                        } else {
-                            if(o.latestChapter.url !== newData.url) {
-                                o.latestChapter = newData;
-                                return o;
+
+                if(_.isArray(o.url)) {
+                    let all = o.url.map((url, i) => {
+                        return axios.get(url, o.axiosOptions)
+                            .then( res=> {
+                                return o.parseData[i](this, res.data);
+                            });
+                    });
+
+                    promise = axios.all(all)
+                        .then(res => {
+                            if(!o.latestChapter) {
+                                o.latestChapter = res[0] || res[1];
+                                o.onLoadChapter(this);
+                                return null;
+                            } else {
+                                let newData = null;
+                                res.forEach(e => {
+                                    if(e && e.title !== o.latestChapter.title) {
+                                        newData = e;
+                                    }
+                                });
+                                if(newData) {
+                                    o.latestChapter = newData;
+                                }
+                                return newData ? o : null;
                             }
-                            return null;
-                        }
-                    }, e => {
-                        //timeout constantly...
-                        
-                        console.error(e);
-                        end();
-                    }).then(o => {
-                        if(_.isObject(o)) {
-                            let str = o.onNewChapter(this);
-                            this.broadcast(str, 'notices');
-                        }
+                        }, e => {
+                            console.error(e);
+                            end();
+                        });
+                }
+                else {
+                    promise = axios.get(o.url, o.axiosOptions)
+                        .then(res => {
+                            // return null if you don't want it to reports.
+                            let newData = o.parseData(this, res.data);
+                            if(!o.latestChapter) {
+                                // first time
+                                o.latestChapter = newData;
+                                o.onLoadChapter(this);
+                                return null;
+                            } else {
+                                if(o.latestChapter.url !== newData.url) {
+                                    o.latestChapter = newData;
+                                    return o;
+                                }
+                                return null;
+                            }
+                        }, e => {
+                            //timeout constantly...
+                            
+                            console.error(e);
+                            end();
+                        });
+                }
+
+                promise.then(o => {
+                    if(_.isObject(o)) {
+                        let str = o.onNewChapter(this);
+                        this.broadcast(str, 'notices');
+                    }
                     end();
                 }, e => {
+                    console.log('95')
+                    console.error(e);
                     end();
                 })
                 .catch(e => {
+                    console.log('99')
+                    console.error(e);
                     end();
                 });
-                
-           },  60000);
+           },  delay);
         });
 
-        // this.changeDelayInterval = AsyncPolling(end => {
-        //     _.forOwn(this.pollingList, o => {
-        //         if(_.isFunction(o.delay)) {
-        //             let newDelay = o.delay();
-        //             if(newDelay !== o.asyncPolling._delay) {
-        //                 o.asyncPolling._delay = newDelay;
-        //             }
-        //         }
-        //     });
-        //     end();
-        // }, 60000 * 10);
+        this.changeDelayInterval = AsyncPolling(end => {
+            _.forOwn(this.pollingList, o => {
+                if(_.isFunction(o.delay)) {
+                    let newDelay = o.delay();
+                    if(newDelay !== o.asyncPolling._delay) {
+                        o.asyncPolling._delay = newDelay;
+                    }
+                }
+            });
+            end();
+        }, 60000 * 10);
 
         // on ready
         this.client.on('ready', () => {
@@ -91,7 +130,7 @@ class Bot {
     
             this.startTime = moment();
             this.lastPollingTime = moment();
-            //this.changeDelayInterval.run();
+            this.changeDelayInterval.run();
             this.runPoll();
             //this.broadcast('Hong\'er v' + pkg.version + ' is ready!!\nOhhh!!!');
         });
