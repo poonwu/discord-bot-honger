@@ -5,7 +5,7 @@ var ax = require('axios');
 app.get('/', function(req, res) {
     res.send('Launched');
 });
-app.get('/vespainteractive.kingsraid.loc/host.json', function(req, res) {
+app.get('/vespainteractive.kingsraid.local/host.json', function(req, res) {
     res.header('Content-Type', 'application/json');
     res.status(200).send(new Buffer(JSON.stringify(host)));
 });
