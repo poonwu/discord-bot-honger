@@ -10,7 +10,7 @@ const moment = require('moment-timezone');
 const command = require('./command.js');
 const pollingList = require('./polling.js');
 const pkg = require('./package.json');
-const config = require('./config.json');
+const config = require('./config.test.json');
 
 require('v8-profiler');
 
@@ -21,12 +21,12 @@ class Bot {
         this.client = new Discord.Client();
         this.pollingList = pollingList;
 
-        let f = function() {
-            ax.get("https://discord-bot-honger.herokuapp.com/");
-            console.log('pingging heroku');
-        };
-        setInterval(f, 300000); // every 5 minutes (300000)
-        f();
+        // let f = function() {
+        //     ax.get("https://discord-bot-honger.herokuapp.com/");
+        //     console.log('pingging heroku');
+        // };
+        // setInterval(f, 300000); // every 5 minutes (300000)
+        // f();
 
         // create pollings
         _.forOwn(this.pollingList, (o, k) => {

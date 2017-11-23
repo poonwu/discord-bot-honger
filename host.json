@@ -4,13 +4,13 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "MaxVersion": "2.99.999",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
-                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
+                "MaxVersion": "2.72.999",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/iOS/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/iOS/"
             },
             {
                 "Platform": "iOS",
-                "MaxVersion": "2.99.999",
+                "MaxVersion": "2.72.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/iOS/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/iOS/"
             }
