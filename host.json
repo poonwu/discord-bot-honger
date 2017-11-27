@@ -5,8 +5,8 @@
             {
                 "Platform": "Android",
                 "MaxVersion": "2.72.999",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_JapanQA/Android/LastBuildVersion.txt",
-                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_JapanQA/Android/"
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
             },
             {
                 "Platform": "iOS",
