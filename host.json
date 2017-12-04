@@ -4,13 +4,11 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "MaxVersion": "2.72.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_JapanQA/Android/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_JapanQA/Android/"
             },
             {
                 "Platform": "iOS",
-                "MaxVersion": "2.72.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/iOS/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/iOS/"
             }
@@ -105,25 +103,19 @@
         ],
         "Server": [
             {
-                "Name": "Asia",
+                "Name": "NEA",
                 "Opened": true,
-                "Host": "kingsraid-lb-209742857.ap-southeast-1.elb.amazonaws.com:3000",
+                "Host": "kingsraid-lb-1038076652.ap-northeast-1.elb.amazonaws.com:3000",
                 "Https": false,
                 "CookieKeyword": "AWSELB=",
                 "Country": [
-                    "CN",
+                    "KR",
                     "TH",
-                    "SG",
-                    "MY",
-                    "VN",
-                    "LA",
-                    "KH",
+                    "CN",
                     "ID",
-                    "PH",
-                    "BN"
-                ],
-                "ShutdownMessage": "",
-                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Asia.json"
+                    "SG",
+                    "US"
+                ]
             }
         ]
     }
