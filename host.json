@@ -88,5 +88,43 @@
                 "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/America.json"
             }
         ]
+    },
+    {
+        "Description": "For Appstore Review",
+        "AppVersion": [
+            {
+                "Platform": "Android",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_JapanQA/Android/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_JapanQA/Android/"
+            },
+            {
+                "Platform": "iOS",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/iOS/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/iOS/"
+            }
+        ],
+        "Server": [
+            {
+                "Name": "Asia",
+                "Opened": true,
+                "Host": "kingsraid-lb-209742857.ap-southeast-1.elb.amazonaws.com:3000",
+                "Https": false,
+                "CookieKeyword": "AWSELB=",
+                "Country": [
+                    "CN",
+                    "TH",
+                    "SG",
+                    "MY",
+                    "VN",
+                    "LA",
+                    "KH",
+                    "ID",
+                    "PH",
+                    "BN"
+                ],
+                "ShutdownMessage": "",
+                "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Asia.json"
+            }
+        ]
     }
 ]
