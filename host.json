@@ -4,7 +4,7 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
             },
             {
@@ -92,7 +92,7 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
             },
             {
