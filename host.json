@@ -11,8 +11,8 @@
             {
                 "Platform": "iOS",
                 "MaxVersion": "2.82.999",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/iOS/LastBuildVersion.txt",
-                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/iOS/"
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/iOS/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/iOS/"
             }
         ],
         "Server": [
