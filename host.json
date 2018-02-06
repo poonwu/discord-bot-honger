@@ -4,11 +4,13 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
-                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
+                "MaxVersion": "2.82.999",
+                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_JapanQA/Android/LastBuildVersion.txt",
+                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_JapanQA/Android/"
             },
             {
                 "Platform": "iOS",
+                "MaxVersion": "2.82.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch/iOS/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch/iOS/"
             }
@@ -92,8 +94,11 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/Android/LastBuildVersion.txt",
-                "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/Android/"
+                "PatchVersionUrl": "http://192.168.10.200/Build/QA/Android/Patch/LastBuildVersion.txt"
+            },
+            {
+                "Platform": "iOS2",
+                "PatchVersionUrl": "http://192.168.10.200/Build/QA/iOS/Patch/LastBuildVersion.txt"
             },
             {
                 "Platform": "iOS",
