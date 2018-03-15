@@ -4,13 +4,11 @@
         "AppVersion": [
             {
                 "Platform": "Android",
-                "MaxVersion": "2.82.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_JapanQA/Android/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_JapanQA/Android/"
             },
             {
                 "Platform": "iOS",
-                "MaxVersion": "2.82.999",
                 "PatchVersionUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/Patch_QA/iOS/LastBuildVersion.txt",
                 "CdnProxyUrl": "https://d3njctk3ybewd2.cloudfront.net/Patch_QA/iOS/"
             }
@@ -32,7 +30,8 @@
                     "KH",
                     "ID",
                     "PH",
-                    "BN"
+                    "BN",
+                    "JP"
                 ],
                 "ShutdownMessage": "",
                 "QueryServerStatusUrl": "https://s3-ap-southeast-1.amazonaws.com/vespainteractive.kingsraid.locale/ServerStatus/Asia.json"
